@@ -40,7 +40,9 @@ db.once('open', function() {
 });
 
 var public_routes = require('./controllers/public_routes.js');
+var sticky_note_routes = require('./controllers/sticky_note_routes.js');
 app.use('/', public_routes);
+app.use('/', sticky_note_routes);
 
 // Listening
 app.listen(app.get('port'), function() {
