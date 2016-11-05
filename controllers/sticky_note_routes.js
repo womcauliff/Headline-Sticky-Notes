@@ -4,8 +4,8 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 // Note and Article models
-// var Note = require('./models/Note.js');
-// var Article = require('./models/Article.js');
+// var StickyNote = require('./models/StickyNote.js');
+var Article = require('../models/Article.js');
 
 // A GET request to scrape the echojs website.
 router.get('/scrape', function(req, res) {
@@ -31,10 +31,19 @@ router.get('/scrape', function(req, res) {
 				article.title = $(el).find('.storyHeader > h2 > a').text();
 				article.source = $(el).find('.storyHeader > h2 > a').attr('href');
 				articles.push(article);
+
+				//Saves article entry to db
+				var entry = new Article (article);
+				entry.save(function(err, doc) {
+					if (err)
+						console.log(err);
+					else
+						console.log(doc);
+				});
 			});
 			console.log('done with ' + source);
 			console.log("index: " + index);
-			//send articles to client
+			//Sends articles to client
 			if(index == sources.length - 1) {
 				console.log('sending');
 				res.send(articles);
